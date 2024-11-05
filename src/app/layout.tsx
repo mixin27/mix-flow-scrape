@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 
+import { ClerkProvider } from '@clerk/nextjs';
+
 import { Toaster } from '@/components/ui/toaster';
 import { AppProviders } from '@/providers/app-providers';
 
@@ -28,15 +30,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <AppProviders>
-          {children}
-          <Toaster />
-        </AppProviders>
-      </body>
-    </html>
+    <ClerkProvider
+      afterSignOutUrl="/sign-in"
+      appearance={{
+        elements: {
+          formButtonPrimary:
+            'bg-primary hover:bg-primary/90 text-sm !shadow-none',
+        },
+      }}
+    >
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <AppProviders>
+            {children}
+            <Toaster />
+          </AppProviders>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { SignedIn, UserButton } from '@clerk/nextjs';
+
 import BreadcrumbHeader from '@/components/common/breadcrumb-header';
 import DesktopSidebar from '@/components/common/sidebar';
 import { ModeToggle } from '@/components/common/theme/theme-mode-toggle';
@@ -15,6 +17,9 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
 
           <div className="flex items-center gap-1">
             <ModeToggle />
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           </div>
         </header>
         <Separator />
