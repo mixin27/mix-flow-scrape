@@ -4,7 +4,8 @@ import prisma from '@/lib/prisma';
 
 import Editor from '../../_components/editor';
 
-async function WorkflowPage({ params }: { params: { workflowId: string } }) {
+async function WorkflowPage(props: { params: Promise<{ workflowId: string }> }) {
+  const params = await props.params;
   // https://nextjs.org/docs/messages/sync-dynamic-apis
   const { workflowId } = params;
 
