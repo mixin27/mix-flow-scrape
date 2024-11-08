@@ -1,14 +1,26 @@
 'use client';
 
-import { CoinsIcon, GripVerticalIcon } from 'lucide-react';
+import { useReactFlow } from '@xyflow/react';
+import { CoinsIcon, CopyIcon, GripVerticalIcon, TrashIcon } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { CreateFlowNode } from '@/lib/workflow/create-flow-node';
 import { TaskRegistry } from '@/lib/workflow/task/registry';
+import { AppNode } from '@/types/app-node';
 import { TaskType } from '@/types/task';
 
-function NodeHeader({ taskType }: { taskType: TaskType }) {
-  const { icon: Icon, label, isEntryPoint } = TaskRegistry[taskType];
+function NodeHeader({
+  taskType,
+  nodeId,
+}: {
+  taskType: TaskType;
+  nodeId: string;
+}) {
+  const { icon: Icon, label, isEntryPoint, credits } = TaskRegistry[taskType];
+
+  const { deleteElements, getNode, addNodes } = useReactFlow();
+
   return (
     <div className="flex items-center gap-2 p-2">
       <Icon size={16} />
@@ -19,8 +31,43 @@ function NodeHeader({ taskType }: { taskType: TaskType }) {
         <div className="flex items-center gap-1">
           {isEntryPoint && <Badge>Entry point</Badge>}
           <Badge className="flex items-center gap-2 text-xs">
-            <CoinsIcon size={16} />5
+            <CoinsIcon size={16} />
+            {credits}
           </Badge>
+          {!isEntryPoint && (
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  deleteElements({
+                    nodes: [{ id: nodeId }],
+                  });
+                }}
+              >
+                <TrashIcon size={12} />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  const node = getNode(nodeId) as AppNode;
+
+                  const newX = node.position.x;
+                  const h = node.measured?.height ?? 0;
+                  const newY = node.position.y + h + 20;
+                  const newNode = CreateFlowNode(node.data.type, {
+                    x: newX,
+                    y: newY,
+                  });
+
+                  addNodes([newNode]);
+                }}
+              >
+                <CopyIcon size={12} />
+              </Button>
+            </>
+          )}
           <Button
             variant="ghost"
             size="icon"
