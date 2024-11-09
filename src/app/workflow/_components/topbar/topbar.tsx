@@ -13,9 +13,10 @@ import SaveBtn from './save-btn';
 type TopbarProps = {
   title: string;
   subtitle?: string;
+  hideButtons?: boolean;
 };
 
-function Topbar({ title, subtitle }: TopbarProps) {
+function Topbar({ title, subtitle, hideButtons = false }: TopbarProps) {
   const router = useRouter();
 
   return (
@@ -42,8 +43,12 @@ function Topbar({ title, subtitle }: TopbarProps) {
         </div>
       </div>
       <div className="flex flex-1 justify-end gap-1">
-        <ExecuteBtn />
-        <SaveBtn />
+        {!hideButtons && (
+          <>
+            <ExecuteBtn />
+            <SaveBtn />
+          </>
+        )}
       </div>
     </header>
   );
