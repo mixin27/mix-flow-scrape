@@ -4,6 +4,7 @@ import React from 'react';
 
 import { useReactFlow } from '@xyflow/react';
 
+import useFlowValidation from '@/hooks/use-flow-validation';
 import { cn } from '@/lib/utils';
 
 function NodeCard({
@@ -16,6 +17,8 @@ function NodeCard({
   children: React.ReactNode;
 }) {
   const { getNode, setCenter } = useReactFlow();
+  const { invalidInputs } = useFlowValidation();
+  const hasInvalidInputs = invalidInputs.some((node) => node.nodeId === nodeId);
 
   return (
     <div
@@ -35,7 +38,8 @@ function NodeCard({
       }}
       className={cn(
         'flex w-[420px] border-separate cursor-pointer flex-col gap-1 rounded-md border-2 bg-background text-xs',
-        isSelected && 'border-primary'
+        isSelected && 'border-primary',
+        hasInvalidInputs && 'border-2 border-destructive'
       )}
     >
       {children}

@@ -7,6 +7,7 @@ import { ChevronLeftIcon } from 'lucide-react';
 import TooltipWrapper from '@/components/common/tooltip-wrapper';
 import { Button } from '@/components/ui/button';
 
+import ExecuteBtn from './execute-btn';
 import SaveBtn from './save-btn';
 
 type TopbarProps = {
@@ -41,6 +42,7 @@ function Topbar({ title, subtitle }: TopbarProps) {
         </div>
       </div>
       <div className="flex flex-1 justify-end gap-1">
+        <ExecuteBtn />
         <SaveBtn />
       </div>
     </header>
