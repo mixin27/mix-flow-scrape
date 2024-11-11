@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as cheerio from 'cheerio';
 
 import { ExecutionEnvironment } from '@/types/executor';
@@ -10,13 +11,13 @@ export async function ExtractTextFromElementExecutor(
   try {
     const selector = environment.getInputs('Selector');
     if (!selector) {
-      console.error('Selector not defined');
+      environment.log.error('selector is not provided');
       return false;
     }
 
     const html = environment.getInputs('Html');
     if (!html) {
-      console.error('Html not defined');
+      environment.log.error('Html not defined');
       return false;
     }
 
@@ -24,21 +25,21 @@ export async function ExtractTextFromElementExecutor(
     const element = $(selector);
 
     if (!element) {
-      console.error('Element not found');
+      environment.log.error('Element not found');
       return false;
     }
 
     const extractedText = $.text(element);
     if (!extractedText) {
-      console.error('Element has no text');
+      environment.log.error('Element has no text');
       return false;
     }
 
     environment.setOutputs('Extracted text', extractedText);
 
     return true;
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    environment.log.error(error.message);
     return false;
   }
 }
