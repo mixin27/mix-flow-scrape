@@ -17,6 +17,7 @@ import {
 
 import { GetWorkflowExecutionWithPhases } from '@/actions/workflows/get-workflow-execution-with-phases';
 import { GetWorkflowPhaseDetails } from '@/actions/workflows/get-workflow-phase-details';
+import ReactCountupWrapper from '@/components/common/react-countup-wrapper';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -140,7 +141,7 @@ export default function ExecutionViewer({
           <ExecutionLabel
             icon={CoinsIcon}
             label="Credit consumed"
-            value={creditsConsumed}
+            value={<ReactCountupWrapper value={creditsConsumed} />}
           />
         </div>
         <Separator />
@@ -198,7 +199,7 @@ export default function ExecutionViewer({
                   <CoinsIcon size={18} className="stroke-muted-foreground" />
                   <span>Credits</span>
                 </div>
-                <span>TODO</span>
+                <span>{phaseDetails.data.creditsConsumed}</span>
               </Badge>
 
               <Badge variant="outline" className="space-x-4">

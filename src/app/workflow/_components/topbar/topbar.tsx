@@ -8,6 +8,7 @@ import TooltipWrapper from '@/components/common/tooltip-wrapper';
 import { Button } from '@/components/ui/button';
 
 import ExecuteBtn from './execute-btn';
+import NavigationTabs from './navigation-tabs';
 import SaveBtn from './save-btn';
 
 type TopbarProps = {
@@ -42,6 +43,7 @@ function Topbar({ title, subtitle, hideButtons = false }: TopbarProps) {
           )}
         </div>
       </div>
+      <NavigationTabs />
       <div className="flex flex-1 justify-end gap-1">
         {!hideButtons && (
           <>
