@@ -4,15 +4,15 @@ import { useRouter } from 'next/navigation';
 
 import { useMutation } from '@tanstack/react-query';
 import { useReactFlow } from '@xyflow/react';
-import { PlayIcon } from 'lucide-react';
+import { UploadIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { RunWorkflow } from '@/actions/workflows/run-workflow';
+import { PublishWorkflow } from '@/actions/workflows/publish-workflow';
 import { Button } from '@/components/ui/button';
 import useExecutionPlan from '@/hooks/use-execution-plan';
 import { useWorkflowId } from '@/hooks/use-workflow-id';
 
-export default function ExecuteBtn() {
+export default function PublishBtn() {
   const router = useRouter();
   const workflowId = useWorkflowId();
 
@@ -20,14 +20,14 @@ export default function ExecuteBtn() {
   const { toObject } = useReactFlow();
 
   const mutation = useMutation({
-    mutationFn: RunWorkflow,
-    onSuccess: (execution) => {
-      toast.success('Execute started', { id: 'flow-execution' });
-      router.push(`/workflow/runs/${workflowId}/${execution.id}`);
+    mutationFn: PublishWorkflow,
+    onSuccess: () => {
+      toast.success('Workflow published', { id: workflowId });
+      router.refresh();
     },
     onError: (err) => {
       console.log(err);
-      toast.error('Something went wrong', { id: 'flow-execution' });
+      toast.error('Something went wrong', { id: workflowId });
     },
   });
 
@@ -42,16 +42,15 @@ export default function ExecuteBtn() {
           // Client side validation!
           return;
         }
-
-        toast.loading('Executing flow...', { id: 'flow-execution' });
+        toast.loading('Publishing workflow...', { id: workflowId });
         mutation.mutate({
-          workflowId,
+          id: workflowId,
           flowDefinition: JSON.stringify(toObject()),
         });
       }}
     >
-      <PlayIcon size={16} className="stroke-orange-400" />
-      Execute
+      <UploadIcon size={16} className="stroke-green-400" />
+      Publish
     </Button>
   );
 }

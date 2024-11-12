@@ -9,15 +9,23 @@ import { Button } from '@/components/ui/button';
 
 import ExecuteBtn from './execute-btn';
 import NavigationTabs from './navigation-tabs';
+import PublishBtn from './publish-btn';
 import SaveBtn from './save-btn';
+import UnpublishBtn from './unpublish-btn';
 
 type TopbarProps = {
   title: string;
   subtitle?: string;
   hideButtons?: boolean;
+  isPublished?: boolean;
 };
 
-function Topbar({ title, subtitle, hideButtons = false }: TopbarProps) {
+function Topbar({
+  title,
+  subtitle,
+  hideButtons = false,
+  isPublished = false,
+}: TopbarProps) {
   const router = useRouter();
 
   return (
@@ -48,7 +56,14 @@ function Topbar({ title, subtitle, hideButtons = false }: TopbarProps) {
         {!hideButtons && (
           <>
             <ExecuteBtn />
-            <SaveBtn />
+            {isPublished && <UnpublishBtn />}
+
+            {!isPublished && (
+              <>
+                <SaveBtn />
+                <PublishBtn />
+              </>
+            )}
           </>
         )}
       </div>

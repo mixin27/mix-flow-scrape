@@ -27,6 +27,7 @@ import { cn } from '@/lib/utils';
 import { WorkflowStatus } from '@/types/workflow';
 
 import DeleteWorkflowDialog from './delete-workflow-dialog';
+import RunBtn from './run-btn';
 
 type WorkflowCardProps = {
   workflow: Workflow;
@@ -74,6 +75,7 @@ function WorkflowCard({ workflow }: WorkflowCardProps) {
           </div>
         </div>
         <div className="flex items-center space-x-2">
+          {!isDraft && <RunBtn workflowId={workflow.id} />}
           <Link
             href={`/workflow/editor/${workflow.id}`}
             className={cn(
