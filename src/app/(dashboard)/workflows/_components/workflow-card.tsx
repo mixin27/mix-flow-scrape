@@ -38,6 +38,7 @@ import { cn } from '@/lib/utils';
 import { WorkflowExecutionStatus, WorkflowStatus } from '@/types/workflow';
 
 import DeleteWorkflowDialog from './delete-workflow-dialog';
+import DuplicateWorkflowDialog from './duplicate-workflow-dialog';
 import RunBtn from './run-btn';
 import SchedulerDialog from './scheduler-dialog';
 
@@ -54,7 +55,7 @@ function WorkflowCard({ workflow }: WorkflowCardProps) {
   const isDraft = workflow.status === WorkflowStatus.DRAFT;
 
   return (
-    <Card className="border-separate overflow-hidden rounded-lg border shadow-sm hover:shadow-md dark:shadow-primary/30">
+    <Card className="group/card border-separate overflow-hidden rounded-lg border shadow-sm hover:shadow-md dark:shadow-primary/30">
       <CardContent className="flex h-[100px] items-center justify-between p-4">
         <div className="flex items-center gap-4">
           <div
@@ -72,17 +73,22 @@ function WorkflowCard({ workflow }: WorkflowCardProps) {
 
           <div>
             <h3 className="flex items-center text-base font-bold text-muted-foreground">
-              <Link
-                href={`/workflow/editor/${workflow.id}`}
-                className="flex items-center hover:underline"
-              >
-                {workflow.name}
-              </Link>
+              <TooltipWrapper content={workflow.description}>
+                <Link
+                  href={`/workflow/editor/${workflow.id}`}
+                  className="flex items-center hover:underline"
+                >
+                  {workflow.name}
+                </Link>
+              </TooltipWrapper>
+
               {isDraft && (
                 <span className="ml-2 rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
                   Draft
                 </span>
               )}
+
+              <DuplicateWorkflowDialog workflow={workflow} />
             </h3>
 
             <ScheduleSection
