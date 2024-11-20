@@ -5,14 +5,18 @@ import { useState } from 'react';
 
 import { Workflow } from '@prisma/client';
 import {
+  CoinsIcon,
+  CornerDownRightIcon,
   FileTextIcon,
   MoreVerticalIcon,
+  MoveRightIcon,
   PlayIcon,
   ShuffleIcon,
   TrashIcon,
 } from 'lucide-react';
 
 import TooltipWrapper from '@/components/common/tooltip-wrapper';
+import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -28,6 +32,7 @@ import { WorkflowStatus } from '@/types/workflow';
 
 import DeleteWorkflowDialog from './delete-workflow-dialog';
 import RunBtn from './run-btn';
+import SchedulerDialog from './scheduler-dialog';
 
 type WorkflowCardProps = {
   workflow: Workflow;
@@ -72,6 +77,13 @@ function WorkflowCard({ workflow }: WorkflowCardProps) {
                 </span>
               )}
             </h3>
+
+            <ScheduleSection
+              workflowId={workflow.id}
+              isDraft={isDraft}
+              creditsCost={workflow.creditsCost}
+              cron={workflow.cron}
+            />
           </div>
         </div>
         <div className="flex items-center space-x-2">
@@ -141,6 +153,43 @@ function WorkflowActions({
         </DropdownMenuContent>
       </DropdownMenu>
     </>
+  );
+}
+
+function ScheduleSection({
+  workflowId,
+  isDraft,
+  creditsCost = 0,
+  cron,
+}: {
+  workflowId: string;
+  isDraft: boolean;
+  creditsCost?: number;
+  cron: string | null;
+}) {
+  if (isDraft) return null;
+
+  return (
+    <div className="flex items-center gap-2">
+      <CornerDownRightIcon className="size-4 text-muted-foreground" />
+      <SchedulerDialog
+        workflowId={workflowId}
+        cron={cron}
+        key={`${cron}-${workflowId}`}
+      />
+      <MoveRightIcon className="size-4 text-muted-foreground" />
+      <TooltipWrapper content="Credit consumption for full run">
+        <div className="flex items-center gap-3">
+          <Badge
+            variant="outline"
+            className="space-x-2 rounded-sm text-muted-foreground"
+          >
+            <CoinsIcon className="size-4" />
+            {creditsCost}
+          </Badge>
+        </div>
+      </TooltipWrapper>
+    </div>
   );
 }
 
