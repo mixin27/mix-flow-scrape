@@ -4,7 +4,11 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import { Workflow } from '@prisma/client';
+import { format, formatDistanceToNow } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 import {
+  ChevronRightIcon,
+  ClockIcon,
   CoinsIcon,
   CornerDownRightIcon,
   FileTextIcon,
@@ -15,6 +19,9 @@ import {
   TrashIcon,
 } from 'lucide-react';
 
+import ExecutionStatusIndicator, {
+  ExecutionStatusLabel,
+} from '@/app/workflow/runs/[workflowId]/_components/execution-status-indicator';
 import TooltipWrapper from '@/components/common/tooltip-wrapper';
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -28,7 +35,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { WorkflowStatus } from '@/types/workflow';
+import { WorkflowExecutionStatus, WorkflowStatus } from '@/types/workflow';
 
 import DeleteWorkflowDialog from './delete-workflow-dialog';
 import RunBtn from './run-btn';
@@ -107,6 +114,7 @@ function WorkflowCard({ workflow }: WorkflowCardProps) {
           />
         </div>
       </CardContent>
+      <LastRunDetails workflow={workflow} />
     </Card>
   );
 }
@@ -189,6 +197,56 @@ function ScheduleSection({
           </Badge>
         </div>
       </TooltipWrapper>
+    </div>
+  );
+}
+
+function LastRunDetails({ workflow }: { workflow: Workflow }) {
+  const isDraft = workflow.status == WorkflowStatus.DRAFT;
+  if (isDraft) return null;
+
+  const { lastRunAt, lastRunStatus, lastRunId, nextRunAt } = workflow;
+  const formattedStartedAt =
+    lastRunAt && formatDistanceToNow(lastRunAt, { addSuffix: true });
+
+  const nextSchedule = nextRunAt && format(nextRunAt, 'yyyy-MM-dd HH:mm');
+  const nextScheduleUTC =
+    nextRunAt && formatInTimeZone(nextRunAt, 'UTC', 'HH:mm');
+
+  return (
+    <div className="flex items-center justify-between bg-primary/5 px-4 py-1 text-muted-foreground">
+      <div className="flex items-center gap-2 text-sm">
+        {lastRunAt && (
+          <Link
+            href={`/workflow/runs/${workflow.id}/${lastRunId}`}
+            className="group flex items-center gap-2 text-sm"
+          >
+            <span>Last run:</span>
+            <ExecutionStatusIndicator
+              status={lastRunStatus as WorkflowExecutionStatus}
+            />
+            <ExecutionStatusLabel
+              status={lastRunStatus as WorkflowExecutionStatus}
+            />
+            <span>{formattedStartedAt}</span>
+            <ChevronRightIcon
+              size={14}
+              className="-translate-x-[2px] transition group-hover:translate-x-0"
+            />
+          </Link>
+        )}
+
+        {!lastRunAt && <p>No runs yet</p>}
+      </div>
+
+      {nextRunAt && (
+        <div className="flex items-center gap-2 text-sm">
+          <ClockIcon size={12} />
+          <span>Next run at:</span>
+          <span>{nextSchedule}</span>
+          <span className="text-xs">({nextScheduleUTC} UTC)</span>
+        </div>
+      )}
     </div>
   );
 }
