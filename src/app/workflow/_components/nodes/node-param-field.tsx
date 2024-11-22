@@ -8,6 +8,7 @@ import { AppNode } from '@/types/app-node';
 import { TaskParam, TaskParamType } from '@/types/task';
 
 import BrowserInstanceParam from './param/browser-instance-param';
+import SelectParam from './param/select-param';
 import StringParam from './param/string-param';
 
 function NodeParamField({
@@ -51,6 +52,15 @@ function NodeParamField({
           param={param}
           value={''}
           updateNodeParamValue={updateNodeParamValue}
+        />
+      );
+    case TaskParamType.SELECT:
+      return (
+        <SelectParam
+          param={param}
+          value={value}
+          updateNodeParamValue={updateNodeParamValue}
+          disabled={disabled}
         />
       );
     default:

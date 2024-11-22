@@ -68,7 +68,7 @@ export default function ExecutionViewer({
   });
 
   const phaseDetails = useQuery({
-    queryKey: ['phase-details', selectedPhase],
+    queryKey: ['phase-details', selectedPhase, query.data?.status],
     enabled: selectedPhase !== null,
     queryFn: () => GetWorkflowPhaseDetails(selectedPhase!),
   });
