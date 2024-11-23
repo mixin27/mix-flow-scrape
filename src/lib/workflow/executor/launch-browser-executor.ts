@@ -5,6 +5,8 @@ import { ExecutionEnvironment } from '@/types/executor';
 
 import { LaunchBrowserTask } from '../task/launch-browser';
 
+// TODO: handle security using some services
+// E.g. Scraping Browser or Datacenter Proxy from https://brightdata.com
 export async function LaunchBrowserExecutor(
   environment: ExecutionEnvironment<typeof LaunchBrowserTask>
 ): Promise<boolean> {
