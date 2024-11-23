@@ -198,7 +198,7 @@ function ScheduleSection({
             variant="outline"
             className="space-x-2 rounded-sm text-muted-foreground"
           >
-            <CoinsIcon className="size-4" />
+            <CoinsIcon className="mr-2 size-4" />
             {creditsCost}
           </Badge>
         </div>
