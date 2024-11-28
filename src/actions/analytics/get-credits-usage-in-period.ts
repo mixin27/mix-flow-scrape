@@ -1,6 +1,7 @@
 'use server';
 
 import { auth } from '@clerk/nextjs/server';
+import { ExecutionPhase } from '@prisma/client';
 import { eachDayOfInterval, format } from 'date-fns';
 
 import { PeriodToDateRange } from '@/lib/helpers/dates';
@@ -49,10 +50,9 @@ export async function GetCreditsUsageInPeriod(period: Period) {
       };
 
       return acc;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }, {} as any);
+    }, {} as Stats);
 
-  executionPhases.forEach((phase) => {
+  executionPhases.forEach((phase: ExecutionPhase) => {
     const date = format(phase.startedAt!, dateFormat);
     if (phase.status === COMPLETED) {
       stats[date].success += phase.creditsConsumed || 0;
